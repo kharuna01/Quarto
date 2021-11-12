@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Quarto</title>
+  <title>Main</title>
   <style>body { padding: 0; margin: 0; }</style>
 </head>
 
@@ -6238,14 +6238,15 @@ var $author$project$Main$update = F2(
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'DragEnd':
+				var y = $elm$core$Basics$round(model.mouse.y / 100);
+				var x = $elm$core$Basics$round(model.mouse.x / 100);
+				var turn = ((1 <= x) && ((x <= 4) && ((1 <= y) && (y <= 4)))) ? (1 - model.turn) : model.turn;
 				var position = function () {
 					var _v1 = model.hold;
 					if (_v1.$ === 'Nothing') {
 						return model.position;
 					} else {
 						var id = _v1.a;
-						var y = $elm$core$Basics$round(model.mouse.y / 100);
-						var x = $elm$core$Basics$round(model.mouse.x / 100);
 						return A2(
 							$elm$core$List$map,
 							function (p) {
@@ -6266,7 +6267,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{completed: completed, hold: $elm$core$Maybe$Nothing, position: position}),
+						{completed: completed, hold: $elm$core$Maybe$Nothing, position: position, turn: turn}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				var x = msg.a;
@@ -6434,6 +6435,13 @@ var $author$project$Main$column = function (x) {
 		},
 		A2($elm$core$List$range, 1, 4));
 };
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
 var $elm$core$Basics$not = _Basics_not;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$float = _Json_decodeFloat;
@@ -6447,13 +6455,6 @@ var $author$project$Main$onMouseMove = function (msg) {
 			msg,
 			A2($elm$json$Json$Decode$field, 'offsetX', $elm$json$Json$Decode$float),
 			A2($elm$json$Json$Decode$field, 'offsetY', $elm$json$Json$Decode$float)));
-};
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
 };
 var $author$project$Main$pieceSvg = F2(
 	function (piece, completed) {
@@ -6582,7 +6583,43 @@ var $author$project$Main$view = function (model) {
 						function (p) {
 							return (!p.used) && _Utils_eq(p.color, $author$project$Main$Black);
 						},
-						model.position))
+						model.position)),
+					_List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$text_,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$x('50'),
+								$elm$svg$Svg$Attributes$y('50'),
+								$elm$svg$Svg$Attributes$fontSize('40'),
+								$elm$svg$Svg$Attributes$stroke('black'),
+								$elm$svg$Svg$Attributes$fill('black')
+							]),
+						_List_fromArray(
+							[
+								$elm$svg$Svg$text(
+								(!model.turn) ? '先手の番です' : '後手の番です')
+							]))
+					]),
+					$elm$core$List$isEmpty(model.completed) ? _List_Nil : _List_fromArray(
+					[
+						A2(
+						$elm$svg$Svg$text_,
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$x('150'),
+								$elm$svg$Svg$Attributes$y('250'),
+								$elm$svg$Svg$Attributes$fontSize('150'),
+								$elm$svg$Svg$Attributes$stroke('red'),
+								$elm$svg$Svg$Attributes$fill('red')
+							]),
+						_List_fromArray(
+							[
+								$elm$svg$Svg$text(
+								(!model.turn) ? '後手勝利' : '先手勝利')
+							]))
+					])
 				])));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
